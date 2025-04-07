@@ -1,0 +1,3 @@
+.env
+ai_cli.egg-info/
+ai_cli/__pycache__/

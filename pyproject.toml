@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-cli"
+version = "0.1.0"
+description = "CLI tool using ChatGPT or Gemini to suggest/explain/bash commands"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+dependencies = [
+    "click",
+    "requests",
+    "python-dotenv",
+    "pytest",
+    "rich"
+]
+
+[project.scripts]
+ai = "ai_cli.main:cli"
+
