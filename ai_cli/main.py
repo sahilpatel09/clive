@@ -4,9 +4,13 @@ from .commands import suggest_command, explain_command, bash_command, prompt_com
 from typing import Optional
 from rich.console import Console
 from rich.markdown import Markdown
+from rich.progress import Progress
+from rich.spinner import Spinner
 
-# Create a console instance
 console = Console()
+
+def show_loading():
+    console.print("[bold yellow]Loading...[/bold yellow]", end="\r")
 
 def print_md(text: str) -> None:
     """Print Markdown text to console with additional formatting."""
@@ -69,6 +73,7 @@ def prompt(prompt: str) -> None:
 @click.option('--short', is_flag=True, help="Keep the response short and straightforward.")
 def prompt(prompt: str, short: bool) -> None:
     """Generate an answer to your questions."""
+    show_loading()
     if short:
         prompt = f"Please keep your response short and to the point: {prompt}"
     print_md(prompt_command(prompt))
