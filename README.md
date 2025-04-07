@@ -4,4 +4,4 @@ This project was written because I needed a quick way to search commands using G
 
 ## Example
 
-![Example of how to use it](images/example.png)
+![Example of how to use it](ai_cli/images/example.png)
