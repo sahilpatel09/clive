@@ -52,13 +52,26 @@ def bash(task: str) -> None:
 
 @cli.command()
 @click.argument('prompt')
+@click.option('--short', is_flag=True, help="Keep the response short and straightforward.")
 def prompt(prompt: str) -> None:
     """Generate an answer to your questions."""
     try:
+        if short:
+            prompt = f"Please keep your response short and to the point: {prompt}"
         result = prompt_command(prompt)
         print_md(result)
     except Exception as e:
         console.print(f"Error: {e}", style="bold red")
+
+
+@cli.command()
+@click.argument('prompt')
+@click.option('--short', is_flag=True, help="Keep the response short and straightforward.")
+def prompt(prompt: str, short: bool) -> None:
+    """Generate an answer to your questions."""
+    if short:
+        prompt = f"Please keep your response short and to the point: {prompt}"
+    print_md(prompt_command(prompt))
 
 
 if __name__ == '__main__':
