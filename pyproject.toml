@@ -12,7 +12,8 @@ dependencies = [
     "requests",
     "python-dotenv",
     "pytest",
-    "rich"
+    "rich",
+    "google-generativeai"
 ]
 
 [project.scripts]

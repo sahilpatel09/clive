@@ -1,3 +1,4 @@
+import os
 import click
 from .commands import suggest_command, explain_command, bash_command, prompt_command
 
@@ -15,7 +16,6 @@ def show_loading():
 def print_md(text: str) -> None:
     """Print Markdown text to console with additional formatting."""
     md = Markdown(text)
-    print("\n")
     console.print(md)
     print("\n")
 
@@ -77,6 +77,62 @@ def prompt(prompt: str, short: bool) -> None:
     if short:
         prompt = f"Please keep your response short and to the point: {prompt}"
     print_md(prompt_command(prompt))
+
+from dataclasses import dataclass
+from datetime import datetime
+@dataclass
+class Message:
+    user: str
+    message: str
+    timestamp: int = datetime.now()
+
+@dataclass
+class Chat:
+    """Chat Room"""
+    messages = []
+
+    def broadcast(self, sender, content):
+        msg = Message(sender, content)
+        msg.user = sender
+        msg.message = content
+        self.messages.append(msg)   
+
+import google.generativeai as genai
+
+
+genai.configure(api_key='AIzaSyALLXnxtajBKpxgt4W_ZAcpm7lRDDYYhgo')
+model = genai.GenerativeModel('gemini-1.5-flash')
+conversation_history = []
+
+os.makedirs('chats', exist_ok=True)
+
+import random 
+
+def chat_with_model(user_input, filename):
+    global conversation_history
+    conversation_history.append({"role": "user", "parts": [{"text": user_input}]})
+    response = model.generate_content(conversation_history)
+    model_reply = response.text
+    conversation_history.append({"role": "model", "parts": [{"text": model_reply}]})
+    
+    name = "_".join(filename.split(" "))
+
+    with open(f'chats/{name}.txt', 'a') as f:
+        f.write(f"User: {user_input} \nAI: {model_reply} \n")
+    return model_reply
+
+@cli.command()
+def chat() -> None:
+    """Generate an answer to your questions."""
+    try:
+        filename = input("Please name this chat: ")
+        while True: 
+            input_str = str(input("User: "))
+            response = chat_with_model(input_str, filename)
+            print_md(f"AI: {response}")
+
+    except Exception as e:
+        console.print(f"Error: {e}", style="bold red")
 
 
 if __name__ == '__main__':
